@@ -14,6 +14,11 @@ def valid_url(url):
 def safe_url(url):
     api_key = settings.GOOGLE_API_KEY
 
+    url = valid_url(url)
+
+    if not url:
+        return False
+
     endpoint = f'https://safebrowsing.googleapis.com/v4/threatMatches:find?key={api_key}'
     body = {
         'client': {'clientId': 'hydraulink', 'clientVersion': '1.0'},

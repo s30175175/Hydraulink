@@ -1,3 +1,4 @@
+from press.utils.metadata import fetch_description
 from press.utils.shortener import create_slug
 from press.utils.validators import safe_url, valid_url
 
@@ -26,3 +27,8 @@ def test_valid_url_slash():
 def test_safe_url():
     assert safe_url('https://www.google.com/') is True
     assert safe_url('http://malware.testing.google.test/testing/malware/') is False
+
+
+def test_fetch_description():
+    desc = fetch_description('https://www.google.com')
+    assert isinstance(desc, str)
