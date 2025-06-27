@@ -1,4 +1,9 @@
+import time
+
+from django.core.cache import cache
+
 from press.utils.metadata import fetch_description
+from press.utils.rate_limit import check_rate_limit
 from press.utils.shortener import create_slug
 from press.utils.validators import safe_url, valid_url
 
@@ -32,3 +37,33 @@ def test_safe_url():
 def test_fetch_description():
     desc = fetch_description('https://www.google.com')
     assert isinstance(desc, str)
+
+
+def test_check_rate_limit_allow():
+    ip = '127.0.0.1'
+    cache.delete(ip)
+
+    for _ in range(5):
+        assert check_rate_limit(ip, timeout=2) is True
+
+
+def test_check_rate_limit_block():
+    ip = '127.0.0.2'
+    cache.delete(ip)
+
+    for _ in range(5):
+        assert check_rate_limit(ip, timeout=2) is True
+
+    assert check_rate_limit(ip, timeout=2) is False
+
+
+def test_check_rate_limit_allow_after_limit():
+    ip = '127.0.0.3'
+    cache.delete(ip)
+
+    for _ in range(5):
+        assert check_rate_limit(ip, timeout=2) is True
+
+    assert check_rate_limit(ip, timeout=2) is False
+    time.sleep(3)
+    assert check_rate_limit(ip, timeout=2) is True
