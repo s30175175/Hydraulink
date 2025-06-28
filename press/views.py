@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.generic.edit import FormView
 
 from .forms import ShortURLForm
+from .models import ShortURL
 from .utils.rate_limit import check_rate_limit
 from .utils.shortener import create_slug
 from .utils.validators import safe_url, valid_url
@@ -20,8 +21,14 @@ class IndexView(FormView):
         ip = self.request.META.get('REMOTE_ADDR')
         original_url = valid_url(short_url.original_url)
 
-        if not short_url.slug:
-            short_url.slug = create_slug()
+        if ShortURL.objects.filter(slug=short_url.slug).exists():
+            messages.error(self.request, '此短網址已存在。')
+            return self.form_invalid(form)
+
+        while not short_url.slug:
+            slug = create_slug()
+            if not ShortURL.objects.filter(slug=slug).exists():
+                short_url.slug = slug
 
         if not original_url:
             messages.error(self.request, '請以 http:// 或 https:// 開頭的網站，且不可為內部網址。')
