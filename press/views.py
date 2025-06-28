@@ -1,7 +1,9 @@
 from urllib.parse import parse_qs, urlparse
 
 from django.contrib import messages
-from django.shortcuts import render
+from django.contrib.auth.hashers import check_password, make_password
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views import View
 from django.views.generic.edit import FormView
 
 from .forms import ShortURLForm
@@ -12,7 +14,7 @@ from .utils.validators import safe_url, valid_url
 
 
 class IndexView(FormView):
-    template_name = 'index.html'
+    template_name = 'press/index.html'
     form_class = ShortURLForm
     success_url = '.'
 
@@ -24,6 +26,18 @@ class IndexView(FormView):
         if ShortURL.objects.filter(slug=short_url.slug).exists():
             messages.error(self.request, '此短網址已存在。')
             return self.form_invalid(form)
+
+        if short_url.slug and (not 6 <= len(short_url.slug) <= 8 or not short_url.slug.isalnum()):
+            messages.error(self.request, '短碼請介於6-8位，且只支援英數字。')
+            return self.form_invalid(form)
+
+        if short_url.password and (
+            not 6 <= len(short_url.password) <= 8 or not short_url.password.isalnum()
+        ):
+            messages.error(self.request, '密碼請介於6-8位，且只支援英數字。')
+            return self.form_invalid(form)
+
+        short_url.password = make_password(short_url.password)
 
         while not short_url.slug:
             slug = create_slug()
@@ -61,3 +75,27 @@ class IndexView(FormView):
         return render(
             self.request, self.template_name, {'form': self.get_form(), 'slug': short_url.slug}
         )
+
+
+class RedirectView(View):
+    def get(self, request, slug):
+        short_url = get_object_or_404(ShortURL, slug=slug, is_active=True)
+
+        if short_url.password:
+            return render(request, 'press/password.html', {'slug': slug})
+
+        short_url.click_count += 1
+        short_url.save()
+
+        return redirect(short_url.original_url)
+
+    def post(self, request, slug):
+        short_url = get_object_or_404(ShortURL, slug=slug, is_active=True)
+        input_password = request.POST.get('password')
+
+        if short_url.password and check_password(input_password, short_url.password):
+            return redirect(short_url.original_url)
+
+        else:
+            messages.error(self.request, '密碼錯誤，請再試一次。')
+            return render(request, 'press/password.html', {'slug': slug})
