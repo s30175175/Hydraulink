@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>新增短網址</title>
+</head>
+<body>
+  <h1>新增短網址</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">送出</button>
+  </form>
+
+  {% if slug %}
+    <p>成功建立短網址：{{ slug }}</p>
+  {% endif %}
+
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
+</body>
+</html>

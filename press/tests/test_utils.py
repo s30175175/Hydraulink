@@ -29,6 +29,11 @@ def test_valid_url_slash():
     assert valid_url('https://example.com') == 'https://example.com/'
 
 
+def test_valid_url_localhost():
+    assert valid_url('https://localhost:8000/') is False
+    assert valid_url('https://127.0.0.1/') is False
+
+
 def test_safe_url():
     assert safe_url('https://www.google.com/') is True
     assert safe_url('http://malware.testing.google.test/testing/malware/') is False

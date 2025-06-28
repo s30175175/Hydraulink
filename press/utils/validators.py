@@ -8,16 +8,16 @@ def valid_url(url):
         return False
     if not url.endswith('/'):
         url += '/'
+
+    domain = url.split('//', 1)[1]
+    if domain.startswith(('localhost', '127.', '192.168.', '10.')):
+        return False
+
     return url
 
 
 def safe_url(url):
     api_key = settings.GOOGLE_API_KEY
-
-    url = valid_url(url)
-
-    if not url:
-        return False
 
     endpoint = f'https://safebrowsing.googleapis.com/v4/threatMatches:find?key={api_key}'
     body = {

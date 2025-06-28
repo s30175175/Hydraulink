@@ -4,6 +4,8 @@ from .models import ShortURL
 
 
 class ShortURLForm(forms.ModelForm):
+    slug = forms.CharField(required=False)
+
     class Meta:
         model = ShortURL
         fields = [
@@ -11,9 +13,5 @@ class ShortURLForm(forms.ModelForm):
             'original_url',
             'password',
             'note',
-            'utm-source',
-            'utm-medium',
-            'utm-campaign',
-            'utm-term',
-            'utm-content',
+            'is_active',
         ]
