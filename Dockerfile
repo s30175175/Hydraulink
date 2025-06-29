@@ -14,4 +14,5 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 RUN uv run python manage.py migrate
 
-CMD ["uv", "run", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD uv run sh -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+
