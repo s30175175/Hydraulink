@@ -5,4 +5,17 @@
       <img src="{% static 'assets/images/logo.png' %}" alt="HydrauLink Logo" class="h-18 w-auto block" />
     </a>
   </div>
+    <div class="navbar-end space-x-2 mr-4">
+    {% if request.user.is_authenticated %}
+      <span class="text-sm">你好，{{ request.user.username }}</span>
+      <a href="{% url 'users:shorturl_list' %}" class="btn btn-outline btn-sm">我的短網址</a>
+      <form action="{% url 'users:logout' %}" method="post" class="inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm">登出</button>
+      </form>
+    {% else %}
+      <a href="{% url 'users:login' %}" class="btn btn-sm btn-outline">登入</a>
+      <a href="{% url 'users:register' %}" class="btn btn-sm btn-primary">註冊</a>
+    {% endif %}
+  </div>
 </div>
