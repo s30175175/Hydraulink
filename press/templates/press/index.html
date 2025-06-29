@@ -3,7 +3,30 @@
 {% block main %}
   <h1 class="text-2xl font-bold mb-4">新增短網址</h1>
 
-  <form method="post" autocomplete="off" class="space-y-6">
+  <form method="post" autocomplete="off" class="space-y-6"
+      x-data="{
+        fetchNote() {
+          const url = document.getElementById('id_original_url')?.value;
+          if (!url) {
+            alert('請先輸入網址');
+            return;
+          }
+
+          fetch(`/note/?url=${encodeURIComponent(url)}`)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                document.getElementById('id_note').value = data.result;
+              } else {
+                alert('無法取得頁面資訊');
+              }
+            })
+            .catch((err) => {
+              alert('發生錯誤');
+              console.error('錯誤：', err);
+            });
+        }
+      }">
   {% csrf_token %}
 
   <!-- 連結 -->
@@ -43,7 +66,7 @@
   <div class="form-control">
     <label class="label" for="id_note">
       <span class="label-text">備註說明</span>
-      <button type="button" class="btn btn-sm" id="fetch-description-btn">
+      <button type="button" class="btn btn-sm" id="fetch-description-btn" @click="fetchNote">
         取得頁面資訊
       </button>
     </label>

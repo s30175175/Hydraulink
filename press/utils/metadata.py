@@ -6,8 +6,8 @@ def fetch_description(url):
     response = requests.get(url, timeout=5)
     soup = BeautifulSoup(response.text, 'lxml')
 
-    description = soup.find('meta', attrs={'name': 'description'}) or soup.find(
-        'meta', attrs={'name': 'og:description'}
+    description = soup.find('meta', attrs={'property': 'og:description'}) or soup.find(
+        'meta', attrs={'name': 'description'}
     )
 
     if description and description.get('content'):
