@@ -39,8 +39,8 @@ class IndexView(FormView):
         ):
             messages.error(self.request, '密碼請介於6-8位，且只支援英數字。')
             return self.form_invalid(form)
-
-        short_url.password = make_password(short_url.password)
+        if short_url.password:
+            short_url.password = make_password(short_url.password)
 
         while not short_url.slug:
             slug = create_slug()
