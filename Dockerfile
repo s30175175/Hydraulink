@@ -12,7 +12,5 @@ COPY . .
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked
 
-RUN uv run python manage.py migrate
-
 CMD uv run sh -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
 
