@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{% static 'assets/images/favicon.png' %}" type="image/x-icon">
+    <title>HydrauLink.press</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script type="module" src="{% static 'assets/scripts/app.js' %}"></script>
+  </head>
+  <body class="bg-base-100 text-base-content" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    {% include "shared/navbar.html" %}
+    {% include "shared/messages.html" %}
+    <main class="container mx-auto p-4">{% block main %}{% endblock %}</main>
+  </body>
+</html>
