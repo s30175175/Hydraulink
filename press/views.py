@@ -2,6 +2,7 @@ from urllib.parse import parse_qs, urlparse
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
@@ -107,10 +108,20 @@ class MetadataFetchView(View):
     def get(self, request):
         url = request.GET.get('url')
         if not url:
-            return JsonResponse({'success': False})
+            return redirect('press:index')
 
         try:
             note = fetch_description(url)
             return JsonResponse({'success': True, 'result': note})
         except Exception:
             return JsonResponse({'success': False})
+
+
+class ToggleView(LoginRequiredMixin, View):
+    def post(self, request, slug):
+        short_url = get_object_or_404(ShortURL, slug=slug, create_by=request.user)
+
+        short_url.is_active = not short_url.is_active
+        short_url.save()
+
+        return redirect('users:shorturl_list')
