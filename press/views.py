@@ -2,12 +2,14 @@ from urllib.parse import parse_qs, urlparse
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic.edit import FormView
 
 from .forms import ShortURLForm
 from .models import ShortURL
+from .utils.metadata import fetch_description
 from .utils.rate_limit import check_rate_limit
 from .utils.shortener import create_slug
 from .utils.validators import safe_url, valid_url
@@ -72,9 +74,9 @@ class IndexView(FormView):
         short_url.save()
         messages.success(self.request, '建立成功')
 
-        return render(
-            self.request, self.template_name, {'form': self.get_form(), 'slug': short_url.slug}
-        )
+        form = ShortURLForm()
+
+        return render(self.request, self.template_name, {'form': form, 'slug': short_url.slug})
 
 
 class RedirectView(View):
@@ -99,3 +101,16 @@ class RedirectView(View):
         else:
             messages.error(self.request, '密碼錯誤，請再試一次。')
             return render(request, 'press/password.html', {'slug': slug})
+
+
+class MetadataFetchView(View):
+    def get(self, request):
+        url = request.GET.get('url')
+        if not url:
+            return JsonResponse({'success': False})
+
+        try:
+            note = fetch_description(url)
+            return JsonResponse({'success': True, 'result': note})
+        except Exception:
+            return JsonResponse({'success': False})

@@ -1,23 +1,72 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <title>新增短網址</title>
-</head>
-<body>
-  <h1>新增短網址</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">送出</button>
-  </form>
+{% extends "base.html" %}
+
+{% block main %}
+  <h1 class="text-2xl font-bold mb-4">新增短網址</h1>
+
+  <form method="post" autocomplete="off" class="space-y-6">
+  {% csrf_token %}
+
+  <!-- 連結 -->
+  <div class="form-control">
+    <label class="label" for="id_url">
+      <span class="label-text">連結</span>
+    </label>
+    {{ form.original_url }}
+    <label class="label text-sm text-gray-500">
+      貼上的網址若含 utm 參數，會自動解析並使用 Google Analytics 功能
+    </label>
+  </div>
+
+  <!-- 短網址 -->
+  <div class="form-control">
+    <label class="label" for="id_custom_slug">
+      <span class="label-text">短網址</span>
+    </label>
+    {{ form.slug }}
+    <label class="label text-sm text-gray-500">
+      可自行填寫，或是自動產生
+    </label>
+  </div>
+
+  <!-- 密碼保護 -->
+  <div class="form-control">
+    <label class="label" for="id_password">
+      <span class="label-text">密碼保護</span>
+    </label>
+    {{ form.password }}
+    <label class="label text-sm text-gray-500">
+      若不使用密碼保護，將此欄位清空即可
+    </label>
+  </div>
+
+  <!-- 備註說明 + 取得頁面資訊按鈕 -->
+  <div class="form-control">
+    <label class="label" for="id_note">
+      <span class="label-text">備註說明</span>
+      <button type="button" class="btn btn-sm" id="fetch-description-btn">
+        取得頁面資訊
+      </button>
+    </label>
+    {{ form.note }}
+  </div>
+
+  <!-- 是否啟用 -->
+  <div class="form-control">
+    <label class="cursor-pointer label">
+      <span class="label-text">是否啟用</span>
+      {{ form.is_active }}
+    </label>
+  </div>
+
+  <!-- 送出 -->
+  <button type="submit" class="btn btn-primary">送出</button>
 
   {% if slug %}
-    <p>成功建立短網址：{{ slug }}</p>
+    <p class="mt-4 text-success">成功建立短網址：{{ slug }}</p>
   {% endif %}
+</form>
 
-  {% for message in messages %}
-    <p>{{ message }}</p>
-  {% endfor %}
-</body>
-</html>
+  {% if slug %}
+    <p class="mt-4 text-success">成功建立短網址：{{ slug }}</p>
+  {% endif %}
+{% endblock %}
