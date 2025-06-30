@@ -1,10 +1,31 @@
 {% extends "base.html" %}
-
 {% block main %}
-  <h1 class="text-2xl font-bold mb-4">新增短網址</h1>
-
-  <form method="post" autocomplete="off" class="space-y-6"
-      x-data="{
+{% load static %}
+<div
+  class="hero min-h-screen"
+  style="background-image: url({% static 'assets/images/background.jpg' %});"
+>
+<div class="hero-content flex-col lg:flex-row-reverse">
+<div class="text-neutral-content text-center lg:text-left" x-data="{
+       copy(text) {
+         navigator.clipboard.writeText(text);
+       }
+     }">
+    <h1 class="text-6xl font-bold">Hydraulink</h1>
+    <p class="py-6 text-2xl">
+        Hydraulic Press Your Link
+    </p>
+    {% if slug %}
+    <span class="text-2xl">建立成功：{{ slug }}</span>
+    <button class="btn btn-sm btn-outline"
+        @click="copy('{{ request.scheme }}://{{ request.get_host }}/{{ slug }}')">
+        複製
+    </button>
+    {% endif %}
+</div>
+<div class="card bg-base-100 w-full max-w-xl shrink-0 shadow-2xl">
+    <div class="card-body">
+    <form method="post" x-data="{
         fetchNote() {
           const url = document.getElementById('id_original_url')?.value;
           if (!url) {
@@ -27,69 +48,43 @@
             });
         }
       }">
-  {% csrf_token %}
+        {% csrf_token %}
+    <fieldset class="fieldset">
+        <!-- original_url -->
+        <label for="id_original_url" class="label text-xl">連結</label>
+        <input type="url" name="original_url" id="id_original_url" class="input w-full" required />
+        <label class="label">貼上的網址若含 utm 參數，會自動解析並使用 Google Analytics 功能</label>
 
-  <!-- 連結 -->
-  <div class="form-control">
-    <label class="label" for="id_url">
-      <span class="label-text">連結</span>
-    </label>
-    {{ form.original_url }}
-    <label class="label text-sm text-gray-500">
-      貼上的網址若含 utm 參數，會自動解析並使用 Google Analytics 功能
-    </label>
-  </div>
+        <!-- slug -->
+        <label for="id_slug" class="label text-xl">短網址</label>
+        <input type="text" name="slug" id="id_slug" class="input w-full" placeholder="可自行填寫，或是自動產生" />
 
-  <!-- 短網址 -->
-  <div class="form-control">
-    <label class="label" for="id_custom_slug">
-      <span class="label-text">短網址</span>
-    </label>
-    {{ form.slug }}
-    <label class="label text-sm text-gray-500">
-      可自行填寫，或是自動產生
-    </label>
-  </div>
+        <!-- password -->
+        <label for="id_password" class="label text-xl">密碼</label>
+        <input type="text" name="password" id="id_password" class="input w-full" placeholder="若不使用密碼保護，將此欄位清空即可" />
 
-  <!-- 密碼保護 -->
-  <div class="form-control">
-    <label class="label" for="id_password">
-      <span class="label-text">密碼保護</span>
-    </label>
-    {{ form.password }}
-    <label class="label text-sm text-gray-500">
-      若不使用密碼保護，將此欄位清空即可
-    </label>
-  </div>
+        <!-- note -->
+        <label for="id_note" class="label text-xl flex justify-between items-center">
+          備註
+          <button type="button" class="btn btn-sm btn-outline btn-primary" @click="fetchNote">
+            取得頁面資訊
+          </button>
+        </label>
+        <textarea name="note" id="id_note" class="textarea textarea-bordered w-full"></textarea>
 
-  <!-- 備註說明 + 取得頁面資訊按鈕 -->
-  <div class="form-control">
-    <label class="label" for="id_note">
-      <span class="label-text">備註說明</span>
-      <button type="button" class="btn btn-sm" id="fetch-description-btn" @click="fetchNote">
-        取得頁面資訊
-      </button>
-    </label>
-    {{ form.note }}
-  </div>
+        <!-- is_active -->
+        {% if request.user.is_authenticated %}
+        <label class="label cursor-pointer">
+          <input type="checkbox" name="is_active" id="id_is_active" class="checkbox checkbox-md ml-2" checked>
+          <span class="label-text text-lg">啟用</span>
+        </label>
+        {% endif %}
 
-  <!-- 是否啟用 -->
-  <div class="form-control">
-    <label class="cursor-pointer label">
-      <span class="label-text">是否啟用</span>
-      {{ form.is_active }}
-    </label>
-  </div>
+        <button class="btn btn-neutral mt-4">送出</button>
+    </fieldset>
+    </form>
+    </div>
+</div>
+</div>
 
-  <!-- 送出 -->
-  <button type="submit" class="btn btn-primary">送出</button>
-
-  {% if slug %}
-    <p class="mt-4 text-success">成功建立短網址：{{ slug }}</p>
-  {% endif %}
-</form>
-
-  {% if slug %}
-    <p class="mt-4 text-success">成功建立短網址：{{ slug }}</p>
-  {% endif %}
 {% endblock %}

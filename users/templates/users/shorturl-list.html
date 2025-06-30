@@ -20,7 +20,7 @@
             {{ url.slug }}
           </button>
         </td>
-
+        
         <!-- 原始網址 -->
         <td>
           <a href="{{ url.original_url }}" target="_blank" class="link link-hover">
@@ -31,7 +31,7 @@
         <!-- 啟用按鈕 -->
         <td>
           <form method="POST" action="{% url 'press:toggle' url.slug %}"
-                @submit="return confirm('確定要切換啟用狀態？')">
+                onsubmit="return confirm('是否切換啟用狀態？')">
             {% csrf_token %}
             <button type="submit"
                     class="btn btn-sm {% if url.is_active %}btn-success{% else %}btn-outline{% endif %}">
@@ -39,6 +39,8 @@
             </button>
           </form>
         </td>
+
+        
       </tr>
       {% endfor %}
     </tbody>

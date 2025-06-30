@@ -85,7 +85,7 @@ class RedirectView(View):
         short_url = get_object_or_404(ShortURL, slug=slug, is_active=True)
 
         if short_url.password:
-            return render(request, 'press/password.html', {'slug': slug})
+            return render(request, 'press/password.html', {'slug': slug, 'note': short_url.note})
 
         short_url.click_count += 1
         short_url.save()

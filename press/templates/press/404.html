@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <title>404 - 頁面不存在</title>
-</head>
-<body>
-  <h1>404 - 找不到頁面</h1>
-  <p>您所尋找的頁面不存在。</p>
-  <p><a href="/">回首頁</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block main %}
+{% load static %}
+<div
+  class="hero min-h-screen"
+  style="background-image: url({% static 'assets/images/background.jpg' %});"
+>
+  <div class="hero-overlay"></div>
+  <div class="hero-content text-neutral-content text-center">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">404</h1>
+      <p class="mb-5">Not Found</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@ class TestIndexView:
     def test_index_view_get(self, client):
         response = client.get(reverse('press:index'))
         assert response.status_code == 200
-        assert '新增短網址' in response.content.decode('utf-8')
+        assert 'Hydraulic Press Your Link' in response.content.decode('utf-8')
 
     @pytest.mark.django_db
     def test_post_valid_form(self, client):

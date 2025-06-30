@@ -1,11 +1,35 @@
 {% extends "base.html" %}
 {% block main %}
-<div class="max-w-md mx-auto mt-10">
-  <h2 class="text-2xl font-bold mb-4">登入</h2>
-  <form method="post" autocomplete="off">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary w-full mt-4" type="submit">登入</button>
-  </form>
+{% load static %}
+<div
+  class="hero min-h-screen"
+  style="background-image: url({% static 'assets/images/background.jpg' %});"
+>
+<div class="hero-content flex-col lg:flex-row-reverse">
+<div class="text-neutral-content text-center lg:text-left" x-data="{
+       copy(text) {
+         navigator.clipboard.writeText(text);
+       }
+     }">
+    <h1 class="text-6xl font-bold">Hydraulink</h1>
+    <p class="py-6 text-2xl">
+        Hydraulic Press Your Link
+    </p>
 </div>
+<div class="card bg-base-100 w-full max-w-xl shrink-0 shadow-2xl">
+    <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+    <fieldset class="fieldset">
+        <label for="id_username" class="label text-xl">帳號：</label>
+        <input type="text" name="username" id="id_username" class="input w-full"/>        
+        <label for="id_password" class="label text-xl">密碼：</label>
+        <input type="password" name="password" id="id_password" class="input w-full"/>
+      <button class="btn btn-neutral mt-4">登入</button>
+    </fieldset>
+    </form>
+    </div>
+</div>
+</div>
+
 {% endblock %}
