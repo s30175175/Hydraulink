@@ -1,0 +1,37 @@
+# 排除 VS Code 設定
+.vscode/
+.idea/
+
+# Git 檔案
+.git
+.gitignore
+
+# Python 虛擬環境與編譯檔案
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+.venv_cache/
+env/
+*.egg-info/
+
+# Docker 用不到的設定檔
+.dockerignore
+.env
+.env.*
+
+# 單元測試報告 / cache / coverage
+.coverage
+htmlcov/
+pytest_cache/
+*.log
+
+# node modules（如果前端在同一 repo）
+node_modules/
+
+# 給 GitHub 用的展示圖、CI 設定
+.github/
+
+# 靜態產出資料夾（若你有 collectstatic）
+staticfiles/

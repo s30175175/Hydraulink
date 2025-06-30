@@ -86,8 +86,11 @@ docker compose exec web uv run python manage.py createsuperuser
 
 ### 1. 建立短網址
 
+![首頁畫面](.github/assets/index.PNG)
+
 * 表單：首頁 `/`
 * 欄位：原始網址、短碼（可選，未填自動生成）、密碼（可選，未填不加密）
+* 啟用：登入後可勾選是否啟用，未登入無法勾選(預設開啟)
 * 驗證：
 
   * URL 格式與安全性
@@ -101,13 +104,22 @@ docker compose exec web uv run python manage.py createsuperuser
 
 ### 3. 轉址與密碼驗證（`/<slug>/`）
 
+![密碼驗證畫面](.github/assets/password.PNG)
+
 * 若有設定密碼則先跳轉至 `/press/password.html`
 * 若正確或未設定密碼則執行：
 
   * click_count += 1
   * redirect 到原始連結
 
-### 4. Redis 限速邏輯
+### 4. 登入與短網址管理
+
+![短網址管理頁面](.github/assets/shorturl_list.PNG)
+
+* 登入可以管理自己創立的短網址
+* 點擊按鈕可以切換啟用狀態
+
+### 5. Redis 限速邏輯
 
 * 每個 IP 每分鐘最多提交 5 次
 * 超過則直接回傳錯誤
