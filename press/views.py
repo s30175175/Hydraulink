@@ -26,18 +26,14 @@ class IndexView(FormView):
         ip = self.request.META.get('REMOTE_ADDR')
         original_url = valid_url(short_url.original_url)
 
-        if ShortURL.objects.filter(slug=short_url.slug).exists():
-            messages.error(self.request, '此短網址已存在。')
-            return self.form_invalid(form)
-
         if short_url.slug and (not 6 <= len(short_url.slug) <= 8 or not short_url.slug.isalnum()):
-            messages.error(self.request, '短碼請介於6-8位，且只支援英數字。')
+            self._error_message = '短碼請介於6-8位，且只支援英數字。'
             return self.form_invalid(form)
 
         if short_url.password and (
             not 6 <= len(short_url.password) <= 8 or not short_url.password.isalnum()
         ):
-            messages.error(self.request, '密碼請介於6-8位，且只支援英數字。')
+            self._error_message = '密碼請介於6-8位，且只支援英數字。'
             return self.form_invalid(form)
         if short_url.password:
             short_url.password = make_password(short_url.password)
@@ -48,15 +44,15 @@ class IndexView(FormView):
                 short_url.slug = slug
 
         if not original_url:
-            messages.error(self.request, '請以 http:// 或 https:// 開頭的網站，且不可為內部網址。')
+            self._error_message = '請以 http:// 或 https:// 開頭的網站，且不可為內部網址。'
             return self.form_invalid(form)
 
         if not safe_url(original_url):
-            messages.error(self.request, '網址有安全疑慮，來源：Google Safe Browsing')
+            self._error_message = '網址有安全疑慮，來源：Google Safe Browsing'
             return self.form_invalid(form)
 
         if not check_rate_limit(ip):
-            messages.error(self.request, '請求過於頻繁，請稍後再試。')
+            self._error_message = '請求過於頻繁，請稍後再試。'
             return self.form_invalid(form)
 
         short_url.original_url = original_url
@@ -78,6 +74,13 @@ class IndexView(FormView):
         form = ShortURLForm()
 
         return render(self.request, self.template_name, {'form': form, 'slug': short_url.slug})
+
+    def form_invalid(self, form):
+        if hasattr(self, '_error_message'):
+            messages.error(self.request, self._error_message)
+        else:
+            messages.error(self.request, '此短網址已存在。')
+        return super().form_invalid(form)
 
 
 class RedirectView(View):
