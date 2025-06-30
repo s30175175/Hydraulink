@@ -8,15 +8,15 @@ HydrauLink 是一款簡潔實用的 **短網址生成平台**，靈感來自液�
 
 ## 專案特色
 
-**Docker 容器化**：完整支援 Docker 開發與部署，包含 PostgreSQL + Redis + Django。
-**Test-Driven Development**：採用 Pytest + Django plugin 撰寫測試，確保品質。
-**支援密碼保護**：使用者可為短網址加上密碼，保障安全性。
-**自訂短碼**：可自選自訂 slug，長度限制 6–8 字。
-**自動抓取網站簡介**：使用 `og:description` / `meta[name=description]` / `<title>` 自動補上連結簡介。
-**連結安全檢查**：整合 Google Safe Browsing API 驗證原始網址。
-**防止濫用**：以 Redis 快取實作 IP 每分鐘限流（最多 5 次）。
-**點擊次數追蹤**：每次轉址都會記錄 click count。
-**前端整合**：使用 Tailwind CSS + DaisyUI 打造美觀介面，支援 Alpine.js 動態互動。
+- **Docker 容器化**：完整支援 Docker 開發與部署，包含 PostgreSQL + Redis + Django。
+- **Test-Driven Development**：採用 Pytest + Django plugin 撰寫測試，確保品質。
+- **支援密碼保護**：使用者可為短網址加上密碼，保障安全性。
+- **自訂短碼**：可自選自訂 slug，長度限制 6–8 字。
+- **自動抓取網站簡介**：使用 `og:description` / `meta[name=description]` / `<title>` 自動補上連結簡介。
+- **連結安全檢查**：整合 Google Safe Browsing API 驗證原始網址。
+- **防止濫用**：以 Redis 快取實作 IP 每分鐘限流（最多 5 次）。
+- **點擊次數追蹤**：每次轉址都會記錄 click count。
+- **前端整合**：使用 Tailwind CSS + DaisyUI 打造美觀介面，支援 Alpine.js 動態互動。
 
 ---
 
