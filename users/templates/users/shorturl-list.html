@@ -6,6 +6,7 @@
     <thead>
       <tr>
         <th>短網址</th>
+        <th>點擊次數</th>
         <th>原始網址</th>
         <th>狀態</th>
       </tr>
@@ -21,6 +22,11 @@
           </button>
         </td>
         
+        <!-- 點擊次數 -->
+        <td>
+            {{ url.click_count }}
+        </td>
+
         <!-- 原始網址 -->
         <td>
           <a href="{{ url.original_url }}" target="_blank" class="link link-hover">
