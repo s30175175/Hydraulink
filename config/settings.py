@@ -92,3 +92,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 GOOGLE_API_KEY = env('GOOGLE_API_KEY')
 
 LOGIN_URL = 'press:index'
+
+ADMIN_PATH = env('ADMIN_PATH', default='admin')
+
+SUPERUSER_USERNAME = env('DJANGO_SUPERUSER_USERNAME', default=None)
+SUPERUSER_PASSWORD = env('DJANGO_SUPERUSER_PASSWORD', default=None)
